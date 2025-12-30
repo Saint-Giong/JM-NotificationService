@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import rmit.saintgiong.notificationapi.common.dto.request.CreateNotificationRequest;
 import rmit.saintgiong.notificationapi.common.type.KafkaTopic;
 import rmit.saintgiong.notificationapi.services.InternalCreateNotificationInterface;
+import rmit.saintgiong.notificationapi.services.InternalUpdateNotificationInterface;
 import rmit.saintgiong.notificationservice.avro.ApplicantNotificationAction;
+import rmit.saintgiong.notificationservice.domain.services.WebSocketNotificationService;
 
 import java.util.UUID;
 
@@ -18,15 +20,14 @@ import java.util.UUID;
 public class NotificationConsumer {
 
     private final InternalCreateNotificationInterface createNotificationService;
-    private final rmit.saintgiong.notificationservice.domain.services.WebSocketNotificationService webSocketService;
+    private final InternalUpdateNotificationInterface updateNotificationService;
+    private final WebSocketNotificationService webSocketService;
 
     @KafkaListener(topics = KafkaTopic.NEW_APPLICANT_TOPIC, containerFactory = "notificationKafkaListenerContainerFactory")
     @SendTo(KafkaTopic.NEW_APPLICANT_REPLY_TOPIC)
     public String consumeNewApplicant(ApplicantNotificationAction message) {
         log.info("Received new applicant notification for company: {}", message.getCompanyId());
         
-        boolean isConnected = webSocketService.isCompanyConnected(message.getCompanyId());
-
         var response = createNotificationService.createNotification(
                 CreateNotificationRequest.builder()
                         .companyId(message.getCompanyId())
@@ -37,8 +38,12 @@ public class NotificationConsumer {
                         .build()
         );
 
-        if (isConnected) {
+        try {
             webSocketService.sendNotification(message.getCompanyId(), response);
+            // If WebSocket send is successful, mark as read
+            updateNotificationService.updateNotificationIsRead(response.getNotificationId());
+        } catch (Exception e) {
+            log.error("Failed to send WebSocket notification", e);
         }
         
         return "Notification Created";
@@ -49,12 +54,9 @@ public class NotificationConsumer {
     public String consumeEditApplicant(ApplicantNotificationAction message) {
         log.info("Received edit applicant notification for company: {}", message.getCompanyId());
 
-        UUID companyId = UUID.fromString(message.getCompanyId().toString());
-        boolean isConnected = webSocketService.isCompanyConnected(companyId);
-
         var response = createNotificationService.createNotification(
                 CreateNotificationRequest.builder()
-                        .companyId(companyId)
+                        .companyId(message.getCompanyId())
                         .applicantId(message.getApplicantId())
                         .title("Applicant Updated")
                         .message("Applicant (ID: " + message.getApplicantId() + ") has updated their application.")
@@ -62,8 +64,12 @@ public class NotificationConsumer {
                         .build()
         );
 
-        if (isConnected) {
-            webSocketService.sendNotification(companyId, response);
+        try {
+            webSocketService.sendNotification(message.getCompanyId(), response);
+            // If WebSocket send is successful, mark as read
+            updateNotificationService.updateNotificationIsRead(response.getNotificationId());
+        } catch (Exception e) {
+            log.error("Failed to send WebSocket notification", e);
         }
 
         return "Notification Created";
