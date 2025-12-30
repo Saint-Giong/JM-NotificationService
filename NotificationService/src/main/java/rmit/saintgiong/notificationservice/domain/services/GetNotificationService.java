@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class GetNotificationServiceImpl implements InternalGetNotificationInterface {
+public class GetNotificationService implements InternalGetNotificationInterface {
 
     private final CompanyNotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;

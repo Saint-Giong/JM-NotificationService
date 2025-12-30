@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UpdateNotificationServiceImpl implements InternalUpdateNotificationInterface {
+public class UpdateNotificationService implements InternalUpdateNotificationInterface {
 
     private final CompanyNotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;

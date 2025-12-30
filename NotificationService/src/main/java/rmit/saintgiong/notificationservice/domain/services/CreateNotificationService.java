@@ -9,12 +9,9 @@ import rmit.saintgiong.notificationservice.domain.entity.CompanyNotification;
 import rmit.saintgiong.notificationservice.domain.mapper.NotificationMapper;
 import rmit.saintgiong.notificationservice.domain.repository.CompanyNotificationRepository;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
-public class CreateNotificationServiceImpl implements InternalCreateNotificationInterface {
+public class CreateNotificationService implements InternalCreateNotificationInterface {
 
     private final CompanyNotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;

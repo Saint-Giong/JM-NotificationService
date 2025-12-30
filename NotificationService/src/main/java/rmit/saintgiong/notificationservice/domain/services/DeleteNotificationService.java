@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class DeleteNotificationServiceImpl implements InternalDeleteNotificationInterface {
+public class DeleteNotificationService implements InternalDeleteNotificationInterface {
 
     private final CompanyNotificationRepository notificationRepository;
 
