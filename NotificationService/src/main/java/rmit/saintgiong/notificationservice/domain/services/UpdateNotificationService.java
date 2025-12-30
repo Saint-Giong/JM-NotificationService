@@ -19,12 +19,12 @@ public class UpdateNotificationService implements InternalUpdateNotificationInte
     private final NotificationMapper notificationMapper;
 
     @Override
-    public NotificationResponse updateNotification(UUID id, UpdateNotificationRequest request) {
+    public NotificationResponse updateNotificationIsRead(UUID id) {
         CompanyNotification entity = notificationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notification not found with id: " + id));
         
-        notificationMapper.updateEntityFromRequest(request, entity);
-        
+        entity.setRead(true);
+
         CompanyNotification updatedEntity = notificationRepository.save(entity);
         return notificationMapper.toResponse(updatedEntity);
     }

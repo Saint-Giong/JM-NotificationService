@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.web.bind.annotation.*;
-import rmit.saintgiong.notificationapi.common.dto.request.CreateNotificationRequest;
+import rmit.saintgiong.notificationapi.common.dto.request.CreateApplicantNotificationRequest;
 import rmit.saintgiong.notificationapi.common.dto.request.UpdateNotificationRequest;
 import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponse;
 import rmit.saintgiong.notificationapi.common.type.KafkaTopic;
@@ -44,13 +44,12 @@ public class NotificationController {
     @ApiResponse(responseCode = "201", description = "Notification request sent successfully")
     @PostMapping
     public Callable<ResponseEntity<String>> createNotification(
-            @RequestBody CreateNotificationRequest request,
+            @RequestBody CreateApplicantNotificationRequest request,
             @RequestParam(defaultValue = "NEW") String type) {
         return () -> {
             ApplicantNotificationAction avroMessage = new ApplicantNotificationAction(
                     request.getCompanyId().toString(),
-                    request.getApplicantId() != null ? request.getApplicantId() : "test-applicant-id",
-                    "unknown"
+                    request.getApplicantId() != null ? request.getApplicantId().toString() : "test-applicant-id"
             );
 
             String topic;
@@ -97,25 +96,12 @@ public class NotificationController {
         return () -> ResponseEntity.ok(getService.getNotificationsByCompanyId(companyId, pageable));
     }
 
-    @Operation(summary = "Update a notification")
-    @ApiResponse(responseCode = "200", description = "Notification updated successfully")
-    @ApiResponse(responseCode = "404", description = "Notification not found")
-    @PutMapping("/{id}")
-    public Callable<ResponseEntity<NotificationResponse>> updateNotification(@PathVariable UUID id, @RequestBody UpdateNotificationRequest request) {
-        return () -> ResponseEntity.ok(updateService.updateNotification(id, request));
-    }
-
     @Operation(summary = "Mark a notification as read")
     @ApiResponse(responseCode = "200", description = "Notification marked as read")
     @ApiResponse(responseCode = "404", description = "Notification not found")
     @PatchMapping("/{id}/read")
     public Callable<ResponseEntity<NotificationResponse>> markAsRead(@PathVariable UUID id) {
-        return () -> {
-            UpdateNotificationRequest request = UpdateNotificationRequest.builder()
-                    .isRead(true)
-                    .build();
-            return ResponseEntity.ok(updateService.updateNotification(id, request));
-        };
+        return () -> ResponseEntity.ok(updateService.updateNotificationIsRead(id));
     }
 
     @Operation(summary = "Delete a notification")

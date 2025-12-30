@@ -5,5 +5,5 @@ import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponse;
 import java.util.UUID;
 
 public interface InternalUpdateNotificationInterface {
-    NotificationResponse updateNotification(UUID id, UpdateNotificationRequest request);
+    public NotificationResponse updateNotificationIsRead(UUID id);
 }

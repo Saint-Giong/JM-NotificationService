@@ -10,10 +10,6 @@
     {
       "name": "applicantId",
       "type": "string"
-    },
-    {
-       "name": "jobPostId",
-       "type": "string"
     }
   ]
 }
