@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "ApplicantNotificationAction",
+  "namespace": "rmit.saintgiong.notificationservice.avro",
+  "fields": [
+    {
+      "name": "companyId",
+      "type": "string"
+    },
+    {
+      "name": "applicantId",
+      "type": "string"
+    },
+    {
+       "name": "jobPostId",
+       "type": "string"
+    }
+  ]
+}
