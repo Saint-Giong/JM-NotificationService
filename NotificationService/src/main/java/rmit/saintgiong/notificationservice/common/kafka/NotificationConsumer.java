@@ -18,20 +18,29 @@ import java.util.UUID;
 public class NotificationConsumer {
 
     private final InternalCreateNotificationInterface createNotificationService;
+    private final rmit.saintgiong.notificationservice.domain.services.WebSocketNotificationService webSocketService;
 
     @KafkaListener(topics = KafkaTopic.NEW_APPLICANT_TOPIC, containerFactory = "notificationKafkaListenerContainerFactory")
     @SendTo(KafkaTopic.NEW_APPLICANT_REPLY_TOPIC)
     public String consumeNewApplicant(ApplicantNotificationAction message) {
         log.info("Received new applicant notification for company: {}", message.getCompanyId());
         
-        createNotificationService.createNotification(
+        boolean isConnected = webSocketService.isCompanyConnected(message.getCompanyId());
+
+        var response = createNotificationService.createNotification(
                 CreateNotificationRequest.builder()
-                        .companyId(UUID.fromString(message.getCompanyId().toString()))
-                        .applicantId(message.getApplicantId() != null ? message.getApplicantId().toString() : "placeholder-id")
+                        .companyId(message.getCompanyId())
+                        .applicantId(message.getApplicantId())
                         .title("New Applicant")
                         .message("New Applicant ID: " + message.getApplicantId())
+                        .isRead(false)
                         .build()
         );
+
+        if (isConnected) {
+            webSocketService.sendNotification(message.getCompanyId(), response);
+        }
+        
         return "Notification Created";
     }
 
@@ -40,14 +49,23 @@ public class NotificationConsumer {
     public String consumeEditApplicant(ApplicantNotificationAction message) {
         log.info("Received edit applicant notification for company: {}", message.getCompanyId());
 
-        createNotificationService.createNotification(
+        UUID companyId = UUID.fromString(message.getCompanyId().toString());
+        boolean isConnected = webSocketService.isCompanyConnected(companyId);
+
+        var response = createNotificationService.createNotification(
                 CreateNotificationRequest.builder()
-                        .companyId(UUID.fromString(message.getCompanyId().toString()))
-                        .applicantId(message.getApplicantId() != null ? message.getApplicantId().toString() : "placeholder-id")
+                        .companyId(companyId)
+                        .applicantId(message.getApplicantId())
                         .title("Applicant Updated")
                         .message("Applicant (ID: " + message.getApplicantId() + ") has updated their application.")
+                        .isRead(false)
                         .build()
         );
+
+        if (isConnected) {
+            webSocketService.sendNotification(companyId, response);
+        }
+
         return "Notification Created";
     }
 }

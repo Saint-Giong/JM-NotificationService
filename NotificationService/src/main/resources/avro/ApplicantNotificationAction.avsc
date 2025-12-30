@@ -5,11 +5,17 @@
   "fields": [
     {
       "name": "companyId",
-      "type": "string"
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
     },
     {
       "name": "applicantId",
-      "type": "string"
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
     }
   ]
 }

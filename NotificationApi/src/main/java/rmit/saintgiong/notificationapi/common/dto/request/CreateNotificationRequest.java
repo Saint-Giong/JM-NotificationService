@@ -18,14 +18,14 @@ public class CreateNotificationRequest {
     private UUID companyId;
 
     @Schema(description = "ID of the applicant", example = "uuid-placeholder")
-    private String applicantId;
-
-    @Schema(description = "ID of the job post", example = "uuid-placeholder")
-    private String jobPostId;
+    private UUID applicantId;
 
     @Schema(description = "Title of the notification", example = "New Applicant")
     private String title;
 
     @Schema(description = "Message content", example = "You have a new applicant")
     private String message;
+
+    @Schema(description = "Initial read status", example = "false")
+    private boolean isRead;
 }

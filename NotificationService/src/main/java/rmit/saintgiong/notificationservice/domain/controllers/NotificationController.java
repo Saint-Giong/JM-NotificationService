@@ -9,13 +9,13 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.web.bind.annotation.*;
 import rmit.saintgiong.notificationapi.common.dto.request.CreateApplicantNotificationRequest;
-import rmit.saintgiong.notificationapi.common.dto.request.UpdateNotificationRequest;
 import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponse;
 import rmit.saintgiong.notificationapi.common.type.KafkaTopic;
 import rmit.saintgiong.notificationapi.services.InternalCreateNotificationInterface;
@@ -48,8 +48,8 @@ public class NotificationController {
             @RequestParam(defaultValue = "NEW") String type) {
         return () -> {
             ApplicantNotificationAction avroMessage = new ApplicantNotificationAction(
-                    request.getCompanyId().toString(),
-                    request.getApplicantId() != null ? request.getApplicantId().toString() : "test-applicant-id"
+                    request.getCompanyId(),
+                    request.getApplicantId()
             );
 
             String topic;
@@ -92,7 +92,7 @@ public class NotificationController {
             @PathVariable UUID companyId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return () -> ResponseEntity.ok(getService.getNotificationsByCompanyId(companyId, pageable));
     }
 
