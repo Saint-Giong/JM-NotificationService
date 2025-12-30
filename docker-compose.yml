@@ -1,0 +1,10 @@
+services:
+  notification-db:
+    image: postgres:latest
+    container_name: jm-db-notification
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: notification_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
