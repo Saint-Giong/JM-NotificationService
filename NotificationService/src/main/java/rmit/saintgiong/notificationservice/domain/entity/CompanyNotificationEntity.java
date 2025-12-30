@@ -19,7 +19,7 @@ import java.util.UUID;
 @ToString
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class CompanyNotification {
+public class CompanyNotificationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID notificationId;

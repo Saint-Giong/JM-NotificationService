@@ -5,14 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Service;
-import rmit.saintgiong.notificationapi.common.dto.request.CreateNotificationRequest;
+import rmit.saintgiong.notificationapi.common.dto.request.NotificationDto;
 import rmit.saintgiong.notificationapi.common.type.KafkaTopic;
 import rmit.saintgiong.notificationapi.services.InternalCreateNotificationInterface;
 import rmit.saintgiong.notificationapi.services.InternalUpdateNotificationInterface;
 import rmit.saintgiong.notificationservice.avro.ApplicantNotificationAction;
 import rmit.saintgiong.notificationservice.domain.services.WebSocketNotificationService;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class NotificationConsumer {
         log.info("Received new applicant notification for company: {}", message.getCompanyId());
         
         var response = createNotificationService.createNotification(
-                CreateNotificationRequest.builder()
+                NotificationDto.builder()
                         .companyId(message.getCompanyId())
                         .applicantId(message.getApplicantId())
                         .title("New Applicant")
@@ -55,7 +53,7 @@ public class NotificationConsumer {
         log.info("Received edit applicant notification for company: {}", message.getCompanyId());
 
         var response = createNotificationService.createNotification(
-                CreateNotificationRequest.builder()
+                NotificationDto.builder()
                         .companyId(message.getCompanyId())
                         .applicantId(message.getApplicantId())
                         .title("Applicant Updated")

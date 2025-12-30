@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateApplicantNotificationRequest {
+public class CreateKafkaNotificationRequestDto {
 
     @Schema(description = "ID of the company", example = "2a261683-54b8-4365-8775-0d6be8a9c493")
     private UUID companyId;

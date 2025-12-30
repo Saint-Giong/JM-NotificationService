@@ -1,9 +1,8 @@
 package rmit.saintgiong.notificationapi.services;
 
-import rmit.saintgiong.notificationapi.common.dto.request.UpdateNotificationRequest;
-import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponse;
+import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponseDto;
 import java.util.UUID;
 
 public interface InternalUpdateNotificationInterface {
-    public NotificationResponse updateNotificationIsRead(UUID id);
+    public NotificationResponseDto updateNotificationIsRead(UUID id);
 }

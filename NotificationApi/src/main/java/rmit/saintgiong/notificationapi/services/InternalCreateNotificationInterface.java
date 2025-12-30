@@ -1,8 +1,8 @@
 package rmit.saintgiong.notificationapi.services;
 
-import rmit.saintgiong.notificationapi.common.dto.request.CreateNotificationRequest;
-import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponse;
+import rmit.saintgiong.notificationapi.common.dto.request.NotificationDto;
+import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponseDto;
 
 public interface InternalCreateNotificationInterface {
-    NotificationResponse createNotification(CreateNotificationRequest request);
+    NotificationResponseDto createNotification(NotificationDto request);
 }

@@ -2,10 +2,10 @@ package rmit.saintgiong.notificationservice.domain.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import rmit.saintgiong.notificationapi.common.dto.request.CreateNotificationRequest;
-import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponse;
+import rmit.saintgiong.notificationapi.common.dto.request.NotificationDto;
+import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponseDto;
 import rmit.saintgiong.notificationapi.services.InternalCreateNotificationInterface;
-import rmit.saintgiong.notificationservice.domain.entity.CompanyNotification;
+import rmit.saintgiong.notificationservice.domain.entity.CompanyNotificationEntity;
 import rmit.saintgiong.notificationservice.domain.mapper.NotificationMapper;
 import rmit.saintgiong.notificationservice.domain.repository.CompanyNotificationRepository;
 
@@ -17,10 +17,10 @@ public class CreateNotificationService implements InternalCreateNotificationInte
     private final NotificationMapper notificationMapper;
 
     @Override
-    public NotificationResponse createNotification(CreateNotificationRequest request) {
-        CompanyNotification entity = notificationMapper.toEntity(request);
+    public NotificationResponseDto createNotification(NotificationDto request) {
+        CompanyNotificationEntity entity = notificationMapper.toEntity(request);
 
-        CompanyNotification savedEntity = notificationRepository.save(entity);
+        CompanyNotificationEntity savedEntity = notificationRepository.save(entity);
         return notificationMapper.toResponse(savedEntity);
     }
 }

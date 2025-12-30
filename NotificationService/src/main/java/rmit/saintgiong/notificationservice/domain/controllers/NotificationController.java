@@ -15,8 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.web.bind.annotation.*;
-import rmit.saintgiong.notificationapi.common.dto.request.CreateApplicantNotificationRequest;
-import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponse;
+import rmit.saintgiong.notificationapi.common.dto.request.CreateKafkaNotificationRequestDto;
+import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponseDto;
 import rmit.saintgiong.notificationapi.common.type.KafkaTopic;
 import rmit.saintgiong.notificationapi.services.InternalCreateNotificationInterface;
 import rmit.saintgiong.notificationapi.services.InternalDeleteNotificationInterface;
@@ -44,7 +44,7 @@ public class NotificationController {
     @ApiResponse(responseCode = "201", description = "Notification request sent successfully")
     @PostMapping
     public Callable<ResponseEntity<String>> createNotification(
-            @RequestBody CreateApplicantNotificationRequest request,
+            @RequestBody CreateKafkaNotificationRequestDto request,
             @RequestParam(defaultValue = "NEW") String type) {
         return () -> {
             ApplicantNotificationAction avroMessage = new ApplicantNotificationAction(
@@ -74,21 +74,21 @@ public class NotificationController {
     @ApiResponse(responseCode = "200", description = "Notification found")
     @ApiResponse(responseCode = "404", description = "Notification not found")
     @GetMapping("/{id}")
-    public Callable<ResponseEntity<NotificationResponse>> getNotificationById(@PathVariable UUID id) {
+    public Callable<ResponseEntity<NotificationResponseDto>> getNotificationById(@PathVariable UUID id) {
         return () -> ResponseEntity.ok(getService.getNotificationById(id));
     }
 
     @Operation(summary = "Get all notifications")
     @ApiResponse(responseCode = "200", description = "List of all notifications")
     @GetMapping
-    public Callable<ResponseEntity<List<NotificationResponse>>> getAllNotifications() {
+    public Callable<ResponseEntity<List<NotificationResponseDto>>> getAllNotifications() {
         return () -> ResponseEntity.ok(getService.getAllNotifications());
     }
 
     @Operation(summary = "Get notifications by company ID with pagination")
     @ApiResponse(responseCode = "200", description = "Paginated list of notifications")
     @GetMapping("/company/{companyId}")
-    public Callable<ResponseEntity<Page<NotificationResponse>>> getNotificationsByCompanyId(
+    public Callable<ResponseEntity<Page<NotificationResponseDto>>> getNotificationsByCompanyId(
             @PathVariable UUID companyId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -100,7 +100,7 @@ public class NotificationController {
     @ApiResponse(responseCode = "200", description = "Notification marked as read")
     @ApiResponse(responseCode = "404", description = "Notification not found")
     @PatchMapping("/{id}/read")
-    public Callable<ResponseEntity<NotificationResponse>> markAsRead(@PathVariable UUID id) {
+    public Callable<ResponseEntity<NotificationResponseDto>> markAsRead(@PathVariable UUID id) {
         return () -> ResponseEntity.ok(updateService.updateNotificationIsRead(id));
     }
 

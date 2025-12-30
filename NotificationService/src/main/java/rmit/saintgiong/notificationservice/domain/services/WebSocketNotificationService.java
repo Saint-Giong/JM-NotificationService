@@ -3,10 +3,8 @@ package rmit.saintgiong.notificationservice.domain.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.user.SimpUser;
-import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Service;
-import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponse;
+import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponseDto;
 
 import java.util.UUID;
 
@@ -29,7 +27,7 @@ public class WebSocketNotificationService {
     private final SimpMessagingTemplate messagingTemplate;
     private final Map<UUID, CompletableFuture<Boolean>> pendingAcks = new ConcurrentHashMap<>();
 
-    public void sendNotification(UUID companyId, NotificationResponse notification) {
+    public void sendNotification(UUID companyId, NotificationResponseDto notification) {
         log.info("Sending WebSocket notification to company: {}", companyId);
         
         UUID notificationId = notification.getNotificationId();

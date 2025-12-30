@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateNotificationRequest {
+public class NotificationDto {
 
     @Schema(description = "ID of the company", example = "uuid-placeholder")
     private UUID companyId;
