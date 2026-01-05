@@ -1,5 +1,7 @@
-package rmit.saintgiong.notificationservice.common.config;
+package rmit.saintgiong.jmnotificationservice.common.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -12,8 +14,11 @@ import org.springframework.context.annotation.Configuration;
 
 // OpenAPI/Swagger configuration for API documentation.
 @Configuration
+@OpenAPIDefinition(servers = {
+        @Server(url = "/v1/noti/", description = "To Gateway Endpoint"),
+        @Server(url = "http://localhost:8188", description = "Direct Service URL")
+})
 public class OpenApiConfig {
-
 
     @Bean
     public OpenAPI customOpenAPI() {

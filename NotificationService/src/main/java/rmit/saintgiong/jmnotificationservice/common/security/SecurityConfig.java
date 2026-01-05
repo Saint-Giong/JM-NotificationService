@@ -1,4 +1,4 @@
-package rmit.saintgiong.notificationservice.common.security;
+package rmit.saintgiong.jmnotificationservice.common.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,16 +26,17 @@ public class SecurityConfig {
                                 )
                 )
                 .authorizeHttpRequests(auth -> auth
+                        // PUBLIC ENDPOINT FOR ACTUATOR and SWAGGER
                         .requestMatchers(
+                                "/actuator/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/api-docs/**",
                                 "/api-docs.yaml",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/favicon.ico"
                         ).permitAll()
-                        .requestMatchers(
-                                "/actuator/**"
-                        ).permitAll()
+
                         .anyRequest().permitAll()
                 );
 
