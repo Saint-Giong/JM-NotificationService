@@ -1,4 +1,4 @@
-package rmit.saintgiong.notificationservice.common.kafka;
+package rmit.saintgiong.jmnotificationservice.common.kafka;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.ProducerConfig;

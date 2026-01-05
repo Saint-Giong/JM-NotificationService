@@ -1,4 +1,4 @@
-package rmit.saintgiong.notificationservice.common.kafka;
+package rmit.saintgiong.jmnotificationservice.common.kafka;
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
@@ -16,7 +16,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
-import rmit.saintgiong.notificationapi.common.type.KafkaTopic;
+import rmit.saintgiong.shared.type.KafkaTopic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,8 +63,9 @@ public class KafkaConsumerConfig {
    @Bean
    public ConcurrentMessageListenerContainer<String, Object> replyContainer(ConsumerFactory<String, Object> consumerFactory) {
        ContainerProperties containerProperties = new ContainerProperties(
-        KafkaTopic.NEW_APPLICANT_REPLY_TOPIC, 
-        KafkaTopic.EDIT_APPLICANT_REPLY_TOPIC);
+        KafkaTopic.NEW_APPLICANT_TOPIC_REPLIED,
+        KafkaTopic.EDIT_APPLICANT_TOPIC_REPLIED
+       );
        containerProperties.setGroupId("notification-service-reply-group");
 
        return new ConcurrentMessageListenerContainer<>(consumerFactory, containerProperties);

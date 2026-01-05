@@ -1,16 +1,16 @@
-package rmit.saintgiong.notificationservice.common.kafka;
+package rmit.saintgiong.jmnotificationservice.common.kafka;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Service;
-import rmit.saintgiong.notificationapi.common.dto.request.NotificationDto;
-import rmit.saintgiong.notificationapi.common.type.KafkaTopic;
-import rmit.saintgiong.notificationapi.services.InternalCreateNotificationInterface;
-import rmit.saintgiong.notificationapi.services.InternalUpdateNotificationInterface;
-import rmit.saintgiong.notificationservice.avro.ApplicantNotificationAction;
-import rmit.saintgiong.notificationservice.domain.services.WebSocketNotificationService;
+import rmit.saintgiong.jmnotificationapi.external.common.dto.avro.ApplicantNotificationAction;
+import rmit.saintgiong.jmnotificationapi.internal.common.dto.request.NotificationDto;
+import rmit.saintgiong.jmnotificationapi.internal.services.InternalCreateNotificationInterface;
+import rmit.saintgiong.jmnotificationapi.internal.services.InternalUpdateNotificationInterface;
+import rmit.saintgiong.jmnotificationservice.domain.services.websocket.WebSocketNotificationService;
+import rmit.saintgiong.shared.type.KafkaTopic;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +21,8 @@ public class NotificationConsumer {
     private final InternalUpdateNotificationInterface updateNotificationService;
     private final WebSocketNotificationService webSocketService;
 
-    @KafkaListener(topics = KafkaTopic.NEW_APPLICANT_TOPIC, containerFactory = "notificationKafkaListenerContainerFactory")
-    @SendTo(KafkaTopic.NEW_APPLICANT_REPLY_TOPIC)
+    @KafkaListener(topics = KafkaTopic.NEW_APPLICANT_TOPIC_REQUEST, containerFactory = "notificationKafkaListenerContainerFactory")
+    @SendTo(KafkaTopic.NEW_APPLICANT_TOPIC_REPLIED)
     public String consumeNewApplicant(ApplicantNotificationAction message) {
         log.info("Received new applicant notification for company: {}", message.getCompanyId());
         
@@ -47,8 +47,8 @@ public class NotificationConsumer {
         return "Notification Created";
     }
 
-    @KafkaListener(topics = KafkaTopic.EDIT_APPLICANT_TOPIC, containerFactory = "notificationKafkaListenerContainerFactory")
-    @SendTo(KafkaTopic.EDIT_APPLICANT_REPLY_TOPIC)
+    @KafkaListener(topics = KafkaTopic.EDIT_APPLICANT_TOPIC_REQUEST, containerFactory = "notificationKafkaListenerContainerFactory")
+    @SendTo(KafkaTopic.EDIT_APPLICANT_TOPIC_REPLIED)
     public String consumeEditApplicant(ApplicantNotificationAction message) {
         log.info("Received edit applicant notification for company: {}", message.getCompanyId());
 

@@ -1,4 +1,4 @@
-package rmit.saintgiong.notificationservice.common.kafka;
+package rmit.saintgiong.jmnotificationservice.common.kafka;
 
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;

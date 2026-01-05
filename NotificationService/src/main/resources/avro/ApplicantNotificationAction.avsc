@@ -1,7 +1,7 @@
 {
+  "namespace": "rmit.saintgiong.jmnotificationapi.external.common.dto.avro",
   "type": "record",
   "name": "ApplicantNotificationAction",
-  "namespace": "rmit.saintgiong.notificationservice.avro",
   "fields": [
     {
       "name": "companyId",
