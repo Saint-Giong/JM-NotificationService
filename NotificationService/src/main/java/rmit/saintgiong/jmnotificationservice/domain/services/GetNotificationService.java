@@ -1,14 +1,14 @@
-package rmit.saintgiong.notificationservice.domain.services;
+package rmit.saintgiong.jmnotificationservice.domain.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponseDto;
-import rmit.saintgiong.notificationapi.services.InternalGetNotificationInterface;
-import rmit.saintgiong.notificationservice.domain.entity.CompanyNotificationEntity;
-import rmit.saintgiong.notificationservice.domain.mapper.NotificationMapper;
-import rmit.saintgiong.notificationservice.domain.repository.CompanyNotificationRepository;
+import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.NotificationResponseDto;
+import rmit.saintgiong.jmnotificationapi.internal.services.InternalGetNotificationInterface;
+import rmit.saintgiong.jmnotificationservice.domain.entity.CompanyNotificationEntity;
+import rmit.saintgiong.jmnotificationservice.domain.mapper.NotificationMapper;
+import rmit.saintgiong.jmnotificationservice.domain.repository.CompanyNotificationRepository;
 
 import java.util.List;
 import java.util.UUID;

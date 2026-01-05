@@ -1,4 +1,4 @@
-package rmit.saintgiong.notificationservice.domain.controllers;
+package rmit.saintgiong.jmnotificationservice.domain.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,21 +15,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.web.bind.annotation.*;
-import rmit.saintgiong.notificationapi.common.dto.request.CreateKafkaNotificationRequestDto;
-import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponseDto;
-import rmit.saintgiong.notificationapi.common.type.KafkaTopic;
-import rmit.saintgiong.notificationapi.services.InternalCreateNotificationInterface;
-import rmit.saintgiong.notificationapi.services.InternalDeleteNotificationInterface;
-import rmit.saintgiong.notificationapi.services.InternalGetNotificationInterface;
-import rmit.saintgiong.notificationapi.services.InternalUpdateNotificationInterface;
-import rmit.saintgiong.notificationservice.avro.ApplicantNotificationAction;
+import rmit.saintgiong.jmnotificationapi.internal.common.dto.request.CreateKafkaNotificationRequestDto;
+import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.NotificationResponseDto;
+import rmit.saintgiong.jmnotificationapi.internal.services.InternalCreateNotificationInterface;
+import rmit.saintgiong.jmnotificationapi.internal.services.InternalDeleteNotificationInterface;
+import rmit.saintgiong.jmnotificationapi.internal.services.InternalGetNotificationInterface;
+import rmit.saintgiong.jmnotificationapi.internal.services.InternalUpdateNotificationInterface;
+import rmit.saintgiong.jmnotificationapi.external.common.dto.avro.ApplicantNotificationAction;
+import rmit.saintgiong.shared.type.KafkaTopic;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
 @RestController
-@RequestMapping("/notifications")
 @RequiredArgsConstructor
 @Tag(name = "Notification Management", description = "APIs for managing company notifications")
 public class NotificationController {
@@ -42,7 +41,7 @@ public class NotificationController {
 
     @Operation(summary = "Test create a new notification")
     @ApiResponse(responseCode = "201", description = "Notification request sent successfully")
-    @PostMapping
+    @PostMapping("/")
     public Callable<ResponseEntity<String>> createNotification(
             @RequestBody CreateKafkaNotificationRequestDto request,
             @RequestParam(defaultValue = "NEW") String type) {
@@ -54,9 +53,9 @@ public class NotificationController {
 
             String topic;
             if ("UPDATE".equalsIgnoreCase(type)) {
-                topic = KafkaTopic.EDIT_APPLICANT_TOPIC;
+                topic = KafkaTopic.EDIT_APPLICANT_TOPIC_REQUEST;
             } else {
-                topic = KafkaTopic.NEW_APPLICANT_TOPIC;
+                topic = KafkaTopic.NEW_APPLICANT_TOPIC_REQUEST;
             }
 
             ProducerRecord<String, Object> record = new ProducerRecord<>(topic, avroMessage);
@@ -80,7 +79,7 @@ public class NotificationController {
 
     @Operation(summary = "Get all notifications")
     @ApiResponse(responseCode = "200", description = "List of all notifications")
-    @GetMapping
+    @GetMapping("/")
     public Callable<ResponseEntity<List<NotificationResponseDto>>> getAllNotifications() {
         return () -> ResponseEntity.ok(getService.getAllNotifications());
     }

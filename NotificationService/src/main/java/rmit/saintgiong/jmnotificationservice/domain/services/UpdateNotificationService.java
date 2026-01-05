@@ -1,12 +1,12 @@
-package rmit.saintgiong.notificationservice.domain.services;
+package rmit.saintgiong.jmnotificationservice.domain.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponseDto;
-import rmit.saintgiong.notificationapi.services.InternalUpdateNotificationInterface;
-import rmit.saintgiong.notificationservice.domain.entity.CompanyNotificationEntity;
-import rmit.saintgiong.notificationservice.domain.mapper.NotificationMapper;
-import rmit.saintgiong.notificationservice.domain.repository.CompanyNotificationRepository;
+import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.NotificationResponseDto;
+import rmit.saintgiong.jmnotificationapi.internal.services.InternalUpdateNotificationInterface;
+import rmit.saintgiong.jmnotificationservice.domain.entity.CompanyNotificationEntity;
+import rmit.saintgiong.jmnotificationservice.domain.mapper.NotificationMapper;
+import rmit.saintgiong.jmnotificationservice.domain.repository.CompanyNotificationRepository;
 
 import java.util.UUID;
 
@@ -22,7 +22,7 @@ public class UpdateNotificationService implements InternalUpdateNotificationInte
         CompanyNotificationEntity entity = notificationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notification not found with id: " + id));
         
-        entity.setRead(true);
+        entity.setIsRead(true);
 
         CompanyNotificationEntity updatedEntity = notificationRepository.save(entity);
         return notificationMapper.toResponse(updatedEntity);

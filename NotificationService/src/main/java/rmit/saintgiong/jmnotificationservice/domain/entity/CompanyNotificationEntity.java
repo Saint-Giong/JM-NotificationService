@@ -1,4 +1,4 @@
-package rmit.saintgiong.notificationservice.domain.entity;
+package rmit.saintgiong.jmnotificationservice.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,7 +28,7 @@ public class CompanyNotificationEntity {
 
     private String message;
 
-    private boolean isRead;
+    private Boolean isRead;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)

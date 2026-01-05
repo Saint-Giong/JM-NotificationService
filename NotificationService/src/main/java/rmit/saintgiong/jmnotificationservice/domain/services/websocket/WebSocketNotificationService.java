@@ -1,10 +1,10 @@
-package rmit.saintgiong.notificationservice.domain.services;
+package rmit.saintgiong.jmnotificationservice.domain.services.websocket;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import rmit.saintgiong.notificationapi.common.dto.response.NotificationResponseDto;
+import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.NotificationResponseDto;
 
 import java.util.UUID;
 

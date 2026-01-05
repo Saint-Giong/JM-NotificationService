@@ -1,9 +1,9 @@
-package rmit.saintgiong.notificationservice.domain.services;
+package rmit.saintgiong.jmnotificationservice.domain.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import rmit.saintgiong.notificationapi.services.InternalDeleteNotificationInterface;
-import rmit.saintgiong.notificationservice.domain.repository.CompanyNotificationRepository;
+import rmit.saintgiong.jmnotificationapi.internal.services.InternalDeleteNotificationInterface;
+import rmit.saintgiong.jmnotificationservice.domain.repository.CompanyNotificationRepository;
 
 import java.util.UUID;
 
