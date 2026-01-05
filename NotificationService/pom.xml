@@ -196,11 +196,7 @@
             <artifactId>nimbus-jose-jwt</artifactId>
             <version>10.6</version>
         </dependency>
-        <dependency>
-            <groupId>devision.saintgiong</groupId>
-            <artifactId>sg-shared-dto-package</artifactId>
-            <version>0.0.1-SNAPSHOT-15234305012026</version>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-session-data-redis</artifactId>

@@ -49,6 +49,11 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>devision.saintgiong</groupId>
+            <artifactId>sg-shared-dto-package</artifactId>
+            <version>0.0.1-SNAPSHOT-15234305012026</version>
+        </dependency>
     </dependencies>
 
     <build>

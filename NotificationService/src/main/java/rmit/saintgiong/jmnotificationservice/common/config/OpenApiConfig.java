@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(servers = {
         @Server(url = "/v1/noti/", description = "To Gateway Endpoint"),
-        @Server(url = "http://localhost:8188", description = "Direct Service URL")
+        @Server(url = "http://localhost:${server.port}", description = "Direct Notification URL")
 })
 public class OpenApiConfig {
 
