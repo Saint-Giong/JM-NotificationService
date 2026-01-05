@@ -243,7 +243,6 @@
                         <configuration>
                             <sourceDirectory>${project.basedir}/src/main/resources/avro</sourceDirectory>
                             <outputDirectory>${project.build.directory}/generated-sources/avro</outputDirectory>
-<!--                            <outputDirectory>${project.basedir}/../NotificationApi/src/main/java</outputDirectory>-->
                             <stringType>String</stringType>
                         </configuration>
                     </execution>
