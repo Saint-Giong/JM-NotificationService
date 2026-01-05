@@ -1,4 +1,4 @@
-package rmit.saintgiong.notificationapi.services;
+package rmit.saintgiong.jmnotificationapi.internal.services;
 
 import java.util.UUID;
 

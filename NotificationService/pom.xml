@@ -3,16 +3,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>rmit.saintgiong</groupId>
+        <artifactId>jm-notification</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>rmit.saintgiong</groupId>
-    <artifactId>notification-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>jm-notification-service</artifactId>
     <name>NotificationService</name>
     <description>NotificationService</description>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <packaging>jar</packaging>
     <url/>
     <licenses>
         <license/>
@@ -45,12 +54,8 @@
     <dependencies>
         <dependency>
             <groupId>rmit.saintgiong</groupId>
-            <artifactId>notification-api</artifactId>
+            <artifactId>jm-notification-api</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -86,13 +91,11 @@
             <artifactId>spring-boot-webmvc</artifactId>
             <version>4.0.0</version>
         </dependency>
-        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
         </dependency>
-        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -167,6 +170,41 @@
             <artifactId>avro</artifactId>
             <version>1.12.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.3</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.3</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>10.6</version>
+        </dependency>
+        <dependency>
+            <groupId>devision.saintgiong</groupId>
+            <artifactId>sg-shared-dto-package</artifactId>
+            <version>0.0.1-SNAPSHOT-15234305012026</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-session-data-redis</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -209,6 +247,7 @@
                         <configuration>
                             <sourceDirectory>${project.basedir}/src/main/resources/avro</sourceDirectory>
                             <outputDirectory>${project.build.directory}/generated-sources/avro</outputDirectory>
+<!--                            <outputDirectory>${project.basedir}/../NotificationApi/src/main/java</outputDirectory>-->
                             <stringType>String</stringType>
                         </configuration>
                     </execution>

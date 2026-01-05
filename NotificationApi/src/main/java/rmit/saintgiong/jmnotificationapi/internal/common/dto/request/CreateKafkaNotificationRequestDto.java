@@ -1,4 +1,4 @@
-package rmit.saintgiong.notificationapi.common.dto.request;
+package rmit.saintgiong.jmnotificationapi.internal.common.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

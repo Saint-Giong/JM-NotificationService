@@ -1,4 +1,4 @@
-package rmit.saintgiong.notificationservice;
+package rmit.saintgiong.jmnotificationservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package rmit.saintgiong.notificationapi.common.dto;
+package rmit.saintgiong.jmnotificationapi.internal.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

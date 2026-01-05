@@ -1,4 +1,4 @@
-package rmit.saintgiong.notificationapi.common.dto.response;
+package rmit.saintgiong.jmnotificationapi.internal.common.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ public class NotificationResponseDto {
     private UUID notificationId;
     private String title;
     private String message;
-    private boolean isRead;
+    private Boolean isRead;
     private LocalDateTime createdAt;
     private UUID companyId;
 }
