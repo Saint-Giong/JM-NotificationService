@@ -16,6 +16,7 @@ WORKDIR /app
 # Maven runner
 COPY JM-NotificationService/mvnw .
 COPY JM-NotificationService/.mvn .mvn
+RUN sed -i 's/\r$//' mvnw
 RUN chmod +x mvnw
 
 # Dependency
