@@ -11,11 +11,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import rmit.saintgiong.jmnotificationapi.internal.common.dto.ErrorResponseDto;
 import rmit.saintgiong.jmnotificationservice.common.exception.token.InvalidCredentialsException;
 import rmit.saintgiong.jmnotificationservice.common.exception.token.InvalidTokenException;
 import rmit.saintgiong.jmnotificationservice.common.exception.token.TokenExpiredException;
 import rmit.saintgiong.jmnotificationservice.common.exception.token.TokenReuseException;
+import rmit.saintgiong.shared.response.ErrorResponseDto;
 import rmit.saintgiong.shared.type.CookieType;
 
 
@@ -71,11 +71,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<rmit.saintgiong.shared.response.ErrorResponseDto> handleTokenExpiredException(
+    public ResponseEntity<ErrorResponseDto> handleTokenExpiredException(
             TokenExpiredException exception,
             WebRequest request
     ) {
-        rmit.saintgiong.shared.response.ErrorResponseDto errorResponseDto = rmit.saintgiong.shared.response.ErrorResponseDto.builder()
+        ErrorResponseDto errorResponseDto = ErrorResponseDto.builder()
                 .apiPath(request.getDescription(false).replace("uri=", ""))
                 .errorCode(HttpStatus.UNAUTHORIZED)
                 .message(exception.getMessage())
@@ -88,11 +88,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<rmit.saintgiong.shared.response.ErrorResponseDto> handleInvalidTokenException(
+    public ResponseEntity<ErrorResponseDto> handleInvalidTokenException(
             InvalidTokenException exception,
             WebRequest request
     ) {
-        rmit.saintgiong.shared.response.ErrorResponseDto errorResponseDto = rmit.saintgiong.shared.response.ErrorResponseDto.builder()
+        ErrorResponseDto errorResponseDto = ErrorResponseDto.builder()
                 .apiPath(request.getDescription(false).replace("uri=", ""))
                 .errorCode(HttpStatus.UNAUTHORIZED)
                 .message(exception.getMessage())
@@ -105,11 +105,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<rmit.saintgiong.shared.response.ErrorResponseDto> handleInvalidCredentialsException(
+    public ResponseEntity<ErrorResponseDto> handleInvalidCredentialsException(
             InvalidCredentialsException exception,
             WebRequest request
     ) {
-        rmit.saintgiong.shared.response.ErrorResponseDto errorResponseDto = rmit.saintgiong.shared.response.ErrorResponseDto.builder()
+        ErrorResponseDto errorResponseDto = ErrorResponseDto.builder()
                 .apiPath(request.getDescription(false).replace("uri=", ""))
                 .errorCode(HttpStatus.UNAUTHORIZED)
                 .message(exception.getMessage())
@@ -122,7 +122,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TokenReuseException.class)
-    public ResponseEntity<rmit.saintgiong.shared.response.ErrorResponseDto> handleTokenReuseException(
+    public ResponseEntity<ErrorResponseDto> handleTokenReuseException(
             TokenReuseException exception,
             WebRequest request,
             HttpServletResponse response
@@ -142,7 +142,7 @@ public class GlobalExceptionHandler {
         refreshCookie.setMaxAge(0);
         response.addCookie(refreshCookie);
 
-        rmit.saintgiong.shared.response.ErrorResponseDto errorResponseDto = rmit.saintgiong.shared.response.ErrorResponseDto.builder()
+        ErrorResponseDto errorResponseDto = ErrorResponseDto.builder()
                 .apiPath(request.getDescription(false).replace("uri=", ""))
                 .errorCode(HttpStatus.UNAUTHORIZED)
                 .message(exception.getMessage())
