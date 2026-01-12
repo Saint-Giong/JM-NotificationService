@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import rmit.saintgiong.jmnotificationapi.internal.common.dto.request.NotificationDto;
+import rmit.saintgiong.jmnotificationapi.internal.common.dto.request.NotificationBuilderDto;
 import rmit.saintgiong.jmnotificationapi.internal.common.dto.request.UpdateNotificationRequest;
 import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.NotificationResponseDto;
 import rmit.saintgiong.jmnotificationservice.domain.entity.CompanyNotificationEntity;
@@ -15,7 +15,7 @@ public interface NotificationMapper {
     @Mapping(target = "notificationId", ignore = true)
     @Mapping(target = "isRead", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    CompanyNotificationEntity toEntity(NotificationDto request);
+    CompanyNotificationEntity toEntity(NotificationBuilderDto request);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "notificationId", ignore = true)

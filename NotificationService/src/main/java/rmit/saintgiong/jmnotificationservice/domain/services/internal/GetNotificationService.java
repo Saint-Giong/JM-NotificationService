@@ -1,4 +1,4 @@
-package rmit.saintgiong.jmnotificationservice.domain.services;
+package rmit.saintgiong.jmnotificationservice.domain.services.internal;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
