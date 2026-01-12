@@ -11,7 +11,6 @@ import rmit.saintgiong.jmnotificationapi.external.services.ExternalNotificationC
 import rmit.saintgiong.jmnotificationapi.internal.common.dto.request.NotificationBuilderDto;
 import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.NotificationResponseDto;
 import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.NotificationResponseMessageDto;
-import rmit.saintgiong.jmnotificationapi.internal.common.type.SubscriptionKafkaTopic;
 import rmit.saintgiong.jmnotificationapi.internal.services.InternalCreateNotificationInterface;
 import rmit.saintgiong.jmnotificationapi.internal.services.InternalUpdateNotificationInterface;
 import rmit.saintgiong.jmnotificationservice.domain.services.websocket.WebSocketNotificationService;
@@ -26,8 +25,8 @@ public class ExternalNotificationConsumeService implements ExternalNotificationC
     private final InternalUpdateNotificationInterface internalUpdateNotificationService;
     private final WebSocketNotificationService webSocketService;
 
-    @KafkaListener(topics = KafkaTopic.NEW_APPLICANT_TOPIC_REQUEST)
-    @SendTo(KafkaTopic.NEW_APPLICANT_TOPIC_REPLIED)
+    @KafkaListener(topics = KafkaTopic.JM_NEW_APPLICANT_REQUEST_TOPIC)
+    @SendTo(KafkaTopic.JM_NEW_APPLICANT_RESPONSE_TOPIC)
     public NotificationResponseMessageDto handleNewCreatedApplicationRequestSentFromJA(ApplicantNotificationAction message) {
         log.info("Received new applicant notification for company: {}", message.getCompanyId());
 
@@ -61,8 +60,8 @@ public class ExternalNotificationConsumeService implements ExternalNotificationC
                 .build();
     }
 
-    @KafkaListener(topics = KafkaTopic.EDIT_APPLICANT_TOPIC_REQUEST)
-    @SendTo(KafkaTopic.EDIT_APPLICANT_TOPIC_REPLIED)
+    @KafkaListener(topics = KafkaTopic.JM_UPDATE_APPLICANT_REQUEST_TOPIC)
+    @SendTo(KafkaTopic.JM_UPDATE_APPLICANT_RESPONSE_TOPIC)
     public NotificationResponseMessageDto handleNewEditedApplicationRequestSentFromJA(ApplicantNotificationAction message) {
         log.info("Received edit applicant notification for company: {}", message.getCompanyId());
 
@@ -95,7 +94,7 @@ public class ExternalNotificationConsumeService implements ExternalNotificationC
                 .build();
     }
 
-    @KafkaListener(topics = SubscriptionKafkaTopic.SUBSCRIPTION_EXPIRY_NOTIFICATION_TOPIC)
+    @KafkaListener(topics = KafkaTopic.JM_SUBSCRIPTION_EXPIRED_NOTIFICATION_TOPIC)
     public NotificationResponseMessageDto handleExpiryNotificationSentFromSubscription(SubscriptionExpiryNotificationRecord message) {
         log.info("Received subscription expiry notification for company: {}", message.getCompanyId());
 

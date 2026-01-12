@@ -53,9 +53,9 @@ public class NotificationController {
 
             String topic;
             if ("UPDATE".equalsIgnoreCase(type)) {
-                topic = KafkaTopic.EDIT_APPLICANT_TOPIC_REQUEST;
+                topic = KafkaTopic.JM_UPDATE_APPLICANT_REQUEST_TOPIC;
             } else {
-                topic = KafkaTopic.NEW_APPLICANT_TOPIC_REQUEST;
+                topic = KafkaTopic.JM_NEW_APPLICANT_REQUEST_TOPIC;
             }
 
             ProducerRecord<String, Object> record = new ProducerRecord<>(topic, avroMessage);

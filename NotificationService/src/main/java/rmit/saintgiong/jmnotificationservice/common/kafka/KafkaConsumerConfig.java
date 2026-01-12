@@ -9,10 +9,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 
-import rmit.saintgiong.jmnotificationapi.internal.common.type.SubscriptionKafkaTopic;
 import rmit.saintgiong.shared.type.KafkaTopic;
-
-
 
 @Configuration
 @EnableKafka
@@ -35,9 +32,8 @@ public class KafkaConsumerConfig {
     ) {
         // Topic for request and reply communication
         ContainerProperties containerProperties = new ContainerProperties(
-                KafkaTopic.NEW_APPLICANT_TOPIC_REPLIED,
-                KafkaTopic.EDIT_APPLICANT_TOPIC_REPLIED
-//                SubscriptionKafkaTopic.SUBSCRIPTION_EXPIRY_NOTIFICATION_TOPIC
+                KafkaTopic.JM_NEW_APPLICANT_RESPONSE_TOPIC,
+                KafkaTopic.JM_UPDATE_APPLICANT_RESPONSE_TOPIC
         );
 
         return new ConcurrentMessageListenerContainer<>(consumerFactory, containerProperties);
