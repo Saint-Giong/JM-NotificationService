@@ -1,0 +1,29 @@
+{
+  "namespace": "rmit.saintgiong.jmnotificationapi.external.common.dto.avro",
+  "type": "record",
+  "name": "SubscriptionExpiryNotificationRecord",
+  "fields": [
+    {
+      "name": "companyId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "subscriptionId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "title",
+      "type": "string"
+    },
+    {
+      "name": "message",
+      "type": "string"
+    }
+  ]
+}
