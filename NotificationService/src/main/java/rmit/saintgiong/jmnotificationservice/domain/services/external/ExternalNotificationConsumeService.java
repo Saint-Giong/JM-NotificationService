@@ -96,7 +96,6 @@ public class ExternalNotificationConsumeService implements ExternalNotificationC
     }
 
     @KafkaListener(topics = SubscriptionKafkaTopic.SUBSCRIPTION_EXPIRY_NOTIFICATION_TOPIC)
-    @SendTo(SubscriptionKafkaTopic.SUBSCRIPTION_EXPIRY_NOTIFICATION_TOPIC)
     public NotificationResponseMessageDto handleExpiryNotificationSentFromSubscription(SubscriptionExpiryNotificationRecord message) {
         log.info("Received subscription expiry notification for company: {}", message.getCompanyId());
 
@@ -125,7 +124,7 @@ public class ExternalNotificationConsumeService implements ExternalNotificationC
 
         return NotificationResponseMessageDto.builder()
                 .notification("Subscription Expiry Notification Created")
-                .websocket("Company can not receive notification through Websocket")
+                .websocket("Company received notification through Websocket")
                 .build();
     }
 }
