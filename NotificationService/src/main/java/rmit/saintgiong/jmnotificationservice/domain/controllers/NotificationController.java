@@ -21,7 +21,7 @@ import rmit.saintgiong.jmnotificationapi.internal.services.InternalCreateNotific
 import rmit.saintgiong.jmnotificationapi.internal.services.InternalDeleteNotificationInterface;
 import rmit.saintgiong.jmnotificationapi.internal.services.InternalGetNotificationInterface;
 import rmit.saintgiong.jmnotificationapi.internal.services.InternalUpdateNotificationInterface;
-import rmit.saintgiong.jmnotificationapi.external.common.dto.avro.ApplicantNotificationAction;
+import rmit.saintgiong.shared.dto.avro.notification.ApplicantNotificationAction;
 import rmit.saintgiong.shared.type.KafkaTopic;
 
 import java.util.List;

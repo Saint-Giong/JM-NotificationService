@@ -5,13 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Service;
-import rmit.saintgiong.discoveryapi.external.dto.avro.ApplicantMatchNotificationRecord;
 import rmit.saintgiong.jmnotificationapi.external.services.ExternalNotificationConsumeInterface;
 import rmit.saintgiong.jmnotificationapi.internal.common.dto.request.NotificationBuilderDto;
 import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.NotificationResponseDto;
 import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.NotificationResponseMessageDto;
 import rmit.saintgiong.jmnotificationapi.internal.services.InternalCreateNotificationInterface;
 import rmit.saintgiong.jmnotificationservice.domain.services.websocket.WebSocketNotificationService;
+import rmit.saintgiong.shared.dto.avro.notification.ApplicantMatchNotificationRecord;
 import rmit.saintgiong.shared.dto.avro.subscription.SubscriptionExpiredNotificationRecord;
 import rmit.saintgiong.shared.type.KafkaTopic;
 
