@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Service;
-import rmit.saintgiong.jmnotificationapi.external.common.dto.avro.ApplicantNotificationAction;
+import rmit.saintgiong.discoveryapi.external.dto.avro.ApplicantMatchNotificationRecord;
 import rmit.saintgiong.jmnotificationapi.external.common.dto.avro.SubscriptionExpiryNotificationRecord;
 import rmit.saintgiong.jmnotificationapi.external.services.ExternalNotificationConsumeInterface;
 import rmit.saintgiong.jmnotificationapi.internal.common.dto.request.NotificationBuilderDto;
@@ -15,6 +15,8 @@ import rmit.saintgiong.jmnotificationapi.internal.services.InternalCreateNotific
 import rmit.saintgiong.jmnotificationapi.internal.services.InternalUpdateNotificationInterface;
 import rmit.saintgiong.jmnotificationservice.domain.services.websocket.WebSocketNotificationService;
 import rmit.saintgiong.shared.type.KafkaTopic;
+
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -27,15 +29,15 @@ public class ExternalNotificationConsumeService implements ExternalNotificationC
 
     @KafkaListener(topics = KafkaTopic.JM_NEW_APPLICANT_REQUEST_TOPIC)
     @SendTo(KafkaTopic.JM_NEW_APPLICANT_RESPONSE_TOPIC)
-    public NotificationResponseMessageDto handleNewCreatedApplicationRequestSentFromJA(ApplicantNotificationAction message) {
+    public NotificationResponseMessageDto handleNewCreatedApplicationRequestSentFromJA(ApplicantMatchNotificationRecord message) {
         log.info("Received new applicant notification for company: {}", message.getCompanyId());
 
         NotificationResponseDto response = internalCreateNotificationService.createNotification(
                 NotificationBuilderDto.builder()
                         .companyId(message.getCompanyId())
                         .applicantId(message.getApplicantId())
-                        .title("New Applicant")
-                        .message("New Applicant ID: " + message.getApplicantId())
+                        .title("New Applicant Match")
+                        .message("New Applicant Match found! Applicant ID: " + message.getApplicantId())
                         .isRead(false)
                         .build()
         );
@@ -62,15 +64,15 @@ public class ExternalNotificationConsumeService implements ExternalNotificationC
 
     @KafkaListener(topics = KafkaTopic.JM_UPDATE_APPLICANT_REQUEST_TOPIC)
     @SendTo(KafkaTopic.JM_UPDATE_APPLICANT_RESPONSE_TOPIC)
-    public NotificationResponseMessageDto handleNewEditedApplicationRequestSentFromJA(ApplicantNotificationAction message) {
+    public NotificationResponseMessageDto handleNewEditedApplicationRequestSentFromJA(ApplicantMatchNotificationRecord message) {
         log.info("Received edit applicant notification for company: {}", message.getCompanyId());
 
         NotificationResponseDto response = internalCreateNotificationService.createNotification(
                 NotificationBuilderDto.builder()
                         .companyId(message.getCompanyId())
                         .applicantId(message.getApplicantId())
-                        .title("Applicant Updated")
-                        .message("Applicant (ID: " + message.getApplicantId() + ") has updated their application.")
+                        .title("Applicant Updated Match")
+                        .message("Applicant (ID: " + message.getApplicantId() + ") has updated their profile and still matches your search criteria.")
                         .isRead(false)
                         .build()
         );
