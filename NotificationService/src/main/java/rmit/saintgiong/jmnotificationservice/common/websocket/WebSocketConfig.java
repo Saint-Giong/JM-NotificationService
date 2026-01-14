@@ -1,26 +1,43 @@
 package rmit.saintgiong.jmnotificationservice.common.websocket;
 
+import com.corundumstudio.socketio.SocketIOServer;
+import com.corundumstudio.socketio.protocol.JacksonJsonSupport;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+public class WebSocketConfig {
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        // Enable a simple memory-based message broker to carry messages back to the client on destinations prefixed with /topic
-        config.enableSimpleBroker("/topic");
-        // Designates the prefix for messages that are bound for methods annotated with @MessageMapping
-        config.setApplicationDestinationPrefixes("/app");
-    }
+    @Value("${socketio.host:0.0.0.0}")
+    private String host;
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // Registers the /ws-notification endpoint, enabling SockJS fallback options so that alternate transports can be used if WebSocket is not available.
-        registry.addEndpoint("/ws-notification").setAllowedOriginPatterns("*").withSockJS();
+    @Value("${socketio.port:9092}")
+    private Integer port;
+
+    @Bean
+    public SocketIOServer socketIOServer() {
+        com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration(); // Use full package name to avoid confusion with Spring Configuration
+        config.setHostname(host);
+        config.setPort(port);
+        config.setOrigin(null); // Allow all origins for now
+        
+        // Adjust buffer sizes if needed
+        config.setMaxFramePayloadLength(1024 * 1024);
+        config.setMaxHttpContentLength(1024 * 1024);
+
+        // Configure Jackson with JavaTimeModule to support Java 8 date/time types (LocalDateTime, etc.)
+        config.setJsonSupport(new JacksonJsonSupport(new JavaTimeModule()) {
+            @Override
+            protected void init(ObjectMapper objectMapper) {
+                super.init(objectMapper);
+                objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            }
+        });
+
+        return new SocketIOServer(config);
     }
 }

@@ -1,70 +1,104 @@
 package rmit.saintgiong.jmnotificationservice.domain.services.websocket;
 
+import com.corundumstudio.socketio.SocketIOClient;
+import com.corundumstudio.socketio.SocketIOServer;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.NotificationResponseDto;
-
-import java.util.UUID;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
+import rmit.saintgiong.jmnotificationservice.common.utils.JweTokenService;
+import rmit.saintgiong.shared.token.TokenClaimsDto;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.UUID;
 
 @Service
-@Controller
 @RequiredArgsConstructor
 @Slf4j
 public class WebSocketNotificationService {
 
-    private final SimpMessagingTemplate messagingTemplate;
-    private final Map<UUID, CompletableFuture<Boolean>> pendingAcks = new ConcurrentHashMap<>();
+    private final SocketIOServer socketIOServer;
+    private final JweTokenService jweTokenService;
 
-    public void sendNotification(UUID companyId, NotificationResponseDto notification) {
-        log.info("Sending WebSocket notification to company: {}", companyId);
-        
-        UUID notificationId = notification.getNotificationId();
-        CompletableFuture<Boolean> ackFuture = new CompletableFuture<>();
-        pendingAcks.put(notificationId, ackFuture);
+    @PostConstruct
+    public void start() {
 
-        try {
-            messagingTemplate.convertAndSend("/topic/company/" + companyId, notification);
-            
-            // Wait for acknowledgement (e.g., 5 seconds)
-            ackFuture.get(5, TimeUnit.SECONDS);
-            log.info("Received acknowledgement for notification: {}", notificationId);
-        } catch (TimeoutException e) {
-            log.error("Timed out waiting for acknowledgement for notification: {}", notificationId);
-            throw new RuntimeException("Failed to receive WebSocket acknowledgement for notification: " + notificationId, e);
-        } catch (Exception e) {
-            log.error("Error sending WebSocket notification", e);
-            throw new RuntimeException("Error sending WebSocket notification", e);
-        } finally {
-            pendingAcks.remove(notificationId);
+        socketIOServer.addConnectListener(client -> {
+            String token = extractToken(client);
+            if (token != null) {
+                try {
+                    TokenClaimsDto claims = jweTokenService.validateAccessToken(token);
+                    UUID userId = claims.getSub();
+                    // Assuming sub is the companyId/userId
+                    client.joinRoom("company_" + userId.toString());
+                    log.info("Client {} joined room company_{}", client.getSessionId(), userId);
+                } catch (Exception e) {
+                    log.warn("Invalid token for client {}: {}", client.getSessionId(), e.getMessage());
+                }
+            } else {
+
+                //Testing purpose only
+                log.info("No token found for client {}", client.getSessionId());
+
+            }
+            client.joinRoom("company_" + "33333333-3333-3333-3333-333333333333");
+        });
+
+
+
+        socketIOServer.addEventListener("notification:read", Map.class, (client, data, ackSender) -> {
+            log.info("Notification read event received: {}", data);
+            // Implement further logic if needed (e.g. mark as read in DB)
+        });
+
+        log.info("Start Server WebSocketNotificationService...");
+        socketIOServer.start();
+    }
+
+    @PreDestroy
+    public void stop() {
+        if (socketIOServer != null) {
+            socketIOServer.stop();
         }
     }
 
-    @MessageMapping("/ack")
-    public void handleAck(@Payload String notificationIdStr) {
-        try {
-            // Remove potential double quotes if sent as JSON string
-            String cleanId = notificationIdStr.replace("\"", "");
-            UUID notificationId = UUID.fromString(cleanId);
-            log.info("Received ack for notificationId: {}", notificationId);
-            
-            CompletableFuture<Boolean> future = pendingAcks.get(notificationId);
-            if (future != null) {
-                future.complete(true);
-            }
-        } catch (Exception e) {
-            log.warn("Invalid ack payload: {}", notificationIdStr);
+    public void sendNotification(UUID companyId, NotificationResponseDto notification) {
+        log.info("Sending WebSocket notification to company: {}", companyId);
+        socketIOServer.getRoomOperations("company_" + companyId)
+                .sendEvent("notification", notification);
+    }
+
+    private String extractToken(SocketIOClient client) {
+        // 1. Check query param
+        String token = client.getHandshakeData().getSingleUrlParam("token");
+        if (token != null && !token.isEmpty()) return token;
+
+        // 2. Check Authorization header
+        String authHeader = client.getHandshakeData().getHttpHeaders().get("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
         }
+
+        // 3. Check Cookie
+        String cookieHeader = client.getHandshakeData().getHttpHeaders().get("Cookie");
+        if (cookieHeader != null) {
+            String[] cookies = cookieHeader.split(";");
+            for (String cookie : cookies) {
+                String[] parts = cookie.trim().split("=");
+                if (parts.length == 2) {
+                    // Check for common auth cookie names
+                    if ("access_token".equals(parts[0]) || "auth_token".equals(parts[0]) || "token".equals(parts[0])) {
+                        return parts[1];
+                    }
+                    // Also check for standard Java/Spring cookie names if generic
+                    if ("JSESSIONID".equals(parts[0])) { 
+                        // Usually not the JWT but session id. 
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

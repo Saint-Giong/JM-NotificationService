@@ -88,3 +88,7 @@ springdoc:
     operations-sorter: method
     tags-sorter: alpha
   show-actuator: false
+
+socketio:
+  host: 0.0.0.0
+  port: 9092
