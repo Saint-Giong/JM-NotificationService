@@ -1,18 +1,20 @@
 package rmit.saintgiong.jmnotificationservice.domain.services.websocket;
 
+import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.NotificationResponseDto;
 import rmit.saintgiong.jmnotificationservice.common.utils.JweTokenService;
 import rmit.saintgiong.shared.token.TokenClaimsDto;
-
-import java.util.Map;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class WebSocketNotificationService {
     public void start() {
 
         socketIOServer.addConnectListener(client -> {
+
             String token = extractToken(client);
             if (token != null) {
                 try {
@@ -38,11 +41,18 @@ public class WebSocketNotificationService {
                     log.warn("Invalid token for client {}: {}", client.getSessionId(), e.getMessage());
                 }
             } else {
-                log.info("No token found for client {}", client.getSessionId());
+                log.info("No token found for client");
+                String id = client.getHandshakeData().getSingleUrlParam("token");
+                log.info("client id: {}", id);
+
+                if (id != null && !id.isEmpty()) {
+                    client.joinRoom("company_" + id);
+
+                } else {
+                    log.info("No token found in query params for client {}", client.getSessionId());
+                }
             }
         });
-
-
 
         socketIOServer.addEventListener("notification:read", Map.class, (client, data, ackSender) -> {
             log.info("Notification read event received: {}", data);
@@ -67,17 +77,12 @@ public class WebSocketNotificationService {
     }
 
     private String extractToken(SocketIOClient client) {
-        // 1. Check query param
-        String token = client.getHandshakeData().getSingleUrlParam("token");
-        if (token != null && !token.isEmpty()) return token;
 
-        // 2. Check Authorization header
         String authHeader = client.getHandshakeData().getHttpHeaders().get("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
         }
 
-        // 3. Check Cookie
         String cookieHeader = client.getHandshakeData().getHttpHeaders().get("Cookie");
         if (cookieHeader != null) {
             String[] cookies = cookieHeader.split(";");
@@ -89,8 +94,8 @@ public class WebSocketNotificationService {
                         return parts[1];
                     }
                     // Also check for standard Java/Spring cookie names if generic
-                    if ("JSESSIONID".equals(parts[0])) { 
-                        // Usually not the JWT but session id. 
+                    if ("JSESSIONID".equals(parts[0])) {
+                        // Usually not the JWT but session id.
                     }
                 }
             }
