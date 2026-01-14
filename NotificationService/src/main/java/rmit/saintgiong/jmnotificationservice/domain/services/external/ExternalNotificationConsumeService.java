@@ -12,6 +12,7 @@ import rmit.saintgiong.jmnotificationapi.internal.common.dto.response.Notificati
 import rmit.saintgiong.jmnotificationapi.internal.services.InternalCreateNotificationInterface;
 import rmit.saintgiong.jmnotificationservice.domain.services.websocket.WebSocketNotificationService;
 import rmit.saintgiong.shared.dto.avro.notification.ApplicantMatchNotificationRecord;
+import rmit.saintgiong.shared.dto.avro.payment.SubscriptionPaidRequestRecord;
 import rmit.saintgiong.shared.dto.avro.subscription.SubscriptionExpiredNotificationRecord;
 import rmit.saintgiong.shared.type.KafkaTopic;
 
@@ -102,6 +103,37 @@ public class ExternalNotificationConsumeService implements ExternalNotificationC
 
         try {
             webSocketService.sendNotification(message.getCompanyId(), response);
+        } catch (Exception e) {
+            log.error("Failed to send WebSocket notification for subscription expiry", e);
+            return NotificationResponseMessageDto.builder()
+                    .notification("Subscription Expiry Notification Created")
+                    .websocket("Company can not receive notification through Websocket")
+                    .build();
+        }
+
+        return NotificationResponseMessageDto.builder()
+                .notification("Subscription Expiry Notification Created")
+                .websocket("Company received notification through Websocket")
+                .build();
+    }
+
+    @KafkaListener(topics = KafkaTopic.JM_SUBSCRIPTION_PAID_NOTIFICATION_TOPIC)
+    public NotificationResponseMessageDto handlePaidNotificationSentFromSubscription(SubscriptionPaidRequestRecord message) {
+        log.info("Received notification for company subscription paid: {}", message.getCompanyId());
+
+        NotificationResponseDto response = internalCreateNotificationService.createNotification(
+                NotificationBuilderDto.builder()
+                        .companyId(message.getCompanyId())
+                        .applicantId(null)
+                        .title("Subscription Activated")
+                        .message("Your subscription is activated at the moment. Expired for 30 days.")
+                        .isRead(false)
+                        .build()
+        );
+
+        try {
+            webSocketService.sendNotification(message.getCompanyId(), response);
+
         } catch (Exception e) {
             log.error("Failed to send WebSocket notification for subscription expiry", e);
             return NotificationResponseMessageDto.builder()
