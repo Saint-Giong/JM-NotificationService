@@ -38,12 +38,8 @@ public class WebSocketNotificationService {
                     log.warn("Invalid token for client {}: {}", client.getSessionId(), e.getMessage());
                 }
             } else {
-
-                //Testing purpose only
                 log.info("No token found for client {}", client.getSessionId());
-
             }
-            client.joinRoom("company_" + "33333333-3333-3333-3333-333333333333");
         });
 
 
